@@ -1,0 +1,10 @@
+{
+  "appid": "ttbd2ccb912206dfe8",
+  "appsecret": "160c9284687535df9cd93f169d2a4eb69d44a326",
+  "token": "your token",
+  "authorize_redirect_url": "your url/wechat",
+  "db": {
+    "url": "http://127.0.0.1/chengyu",
+    "password": "root"
+  }
+}

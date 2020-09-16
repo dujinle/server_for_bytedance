@@ -1,0 +1,5 @@
+{
+	"name" : "chengyu-server",
+	"script" : "server.js",
+	"node_args" : ""
+}
