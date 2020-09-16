@@ -105,7 +105,7 @@ module.exports = {
 	let zhuanpan = null
 	if(openid && openid != ''){
 		zhuanpan = await ZhuanPan.getByOpenid(openid);
-	else if(anonymous_openid && anonymous_openid != ''){
+	}else if(anonymous_openid && anonymous_openid != ''){
 		zhuanpan = await ZhuanPan.getByAnonymousId(anonymous_openid);
 	}
 	if(zhuanpan){

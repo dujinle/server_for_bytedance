@@ -1,7 +1,7 @@
 require('dotenv').config()
 const app = require('./src/app')
 
-const PORT = 8081
+const PORT = 8010
 
 
 app.listen(PORT, function () {
