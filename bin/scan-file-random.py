@@ -1,56 +1,50 @@
 import os
 import sys
+import random
 import re,json, hashlib
 from shutil import copyfile
 #-*- encoding:utf-8 -*-
-
-leveldir = 'https://cy.3dtugo.com/upload/levels/images'
-builddir = "https://cy.3dtugo.com/upload/builds/images"
-roledir = "https://cy.3dtugo.com/upload/roles/images"
-menkedir = "https://cy.3dtugo.com/upload/menkes/images"
-
 def getmd5(name):
 	return hashlib.md5(name.encode(encoding='UTF-8')).hexdigest()
 
-def typeof(variate):
-	type = None
-	if isinstance(variate,int):
-		type = "int"
-	elif isinstance(variate,str):
-		type = "str"
-	elif isinstance(variate,float):
-		type = "float"
-	elif isinstance(variate,list):
-		type = "list"
-	elif isinstance(variate,tuple):
-		type = "tuple"
-	elif isinstance(variate,dict):
-		type = "dict"
-	elif isinstance(variate,set):
-		type = "set"
-	return type
+def scandir(indir):
+	filess = []
+	for root,dirs,files in os.walk(indir):
+		for fil in files:
+			idx = fil.find('.');
+			if idx != -1:
+				fil = fil[:idx];
+			filess.append(fil);
+	return filess;
 
-def loadJson(filename):
-	fp = open(filename);
-	data = [];
+def mysort(b):
+	if random.random() > 0.5:
+		return True;
+	else:
+		return False;
+def findrandom(fils):
+	ret = sorted(fils,key=mysort);
+	lens = len(ret);
+	idx = 0;
+	levels = {}
 	while True:
-		line = fp.readline();
-		if line:
-			line = line.rstrip("\n");
-		else:
+		if idx >= lens:
 			break;
-		data.append(line);
-	datastr = ''.join(data);
-	dataJson = json.loads(datastr);
-	return dataJson;
+		sp = []
+		if idx + 3 < lens:
+			sp = ret[idx:idx + 3];
+		else:
+			sp = ret[idx:];
+		levels[idx] = sp;
+
+		idx = idx + 3;
+	lstr = json.dumps(levels,ensure_ascii=False);
+	print(lstr);
 
 def make_level(levelfile,imagesdir,outdir):
 	jdata = loadJson(levelfile);
 	if not os.path.exists(outdir):
 		os.mkdir(outdir);
-	oimdir = os.path.join(outdir,'images');
-	if not os.path.exists(oimdir):
-		os.mkdir(oimdir);
 	for key in jdata:
 		dts = jdata[key];
 		level = {'question':[]};
@@ -62,7 +56,7 @@ def make_level(levelfile,imagesdir,outdir):
 			};
 			source = os.path.join(imagesdir,item + '.png');
 			md5name = getmd5(item);
-			target = os.path.join(oimdir,md5name + '.png')
+			target = os.path.join(outdir,md5name + '.png')
 			try:
 				copyfile(source, target)
 			except IOError as e:
@@ -75,7 +69,7 @@ def make_level(levelfile,imagesdir,outdir):
 			for wd in item:
 				words.append(wd);
 			ques['words'] = words;
-			ques['imageUrl'] = os.path.join(leveldir,md5name + '.png');
+			ques['imageUrl'] = 'abc&&' + target;
 			level['question'].append(ques);
 		levelname = 'level_' + key + '.json';
 		lpath = os.path.join(outdir,levelname);
@@ -85,13 +79,10 @@ def make_level(levelfile,imagesdir,outdir):
 		print('make level:',lpath,' make success');
 
 
-def make_build(levelfile,imagesdir,outdir,exp):
+def make_build(levelfile,imagesdir,outdir):
 	jdata = loadJson(levelfile);
 	if not os.path.exists(outdir):
 		os.mkdir(outdir);
-	oimdir = os.path.join(outdir,'images');
-	if not os.path.exists(oimdir):
-		os.mkdir(oimdir);
 	idx = 0;
 	builds = [];
 	for dts in jdata:
@@ -102,7 +93,7 @@ def make_build(levelfile,imagesdir,outdir,exp):
 		for item in dts['images']:
 			source = os.path.join(imagesdir,item + '.png');
 			md5name = getmd5(item);
-			target = os.path.join(oimdir,md5name + '.png')
+			target = os.path.join(outdir,md5name + '.png')
 			try:
 				copyfile(source, target)
 			except IOError as e:
@@ -111,8 +102,7 @@ def make_build(levelfile,imagesdir,outdir,exp):
 			except:
 				print("Unexpected error:", sys.exc_info())
 				sys.exit(1)
-			pt = os.path.join(exp,md5name + '.png');
-			images.append(pt);
+			images.append(target);
 		dts['images'] = images;
 		dts['ImageType'] = 1;
 		builds.append(dts);
@@ -124,32 +114,14 @@ def make_build(levelfile,imagesdir,outdir,exp):
 		f.write(lstr)
 	print('make build:',lpath,' make success');
 
-def make_rbm(levelfile,imagesdir,outdir,tp):
-	exp = '';
-	if tp == 'build':
-		exp = builddir;
-	elif tp == 'role':
-		exp = roledir;
-	elif tp == 'menke':
-		exp = menkedir
-	make_build(levelfile,imagesdir,outdir,exp)
-
 def print_usage(exe):
-	print("Usage : python %s type[level|build|role|menke] ......\
-		\nlevel:levelfile imagesdir outdir \
-			" %(exe));
+	print("Usage : python %s outdir" %(exe));
 	sys.exit(-1)
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 2:
 	print_usage(sys.argv[0])
 elif sys.argv[1] == "--help":
 	print_usage(sys.argv[0])
 else:
-	if sys.argv[1] == 'level':
-		make_level(sys.argv[2],sys.argv[3],sys.argv[4]);
-	elif sys.argv[1] == 'build':
-		make_rbm(sys.argv[2],sys.argv[3],sys.argv[4],'build')
-	elif sys.argv[1] == 'role':
-		make_rbm(sys.argv[2],sys.argv[3],sys.argv[4],'role')
-	elif sys.argv[1] == 'menke':
-		make_rbm(sys.argv[2],sys.argv[3],sys.argv[4],'menke')
+	files = scandir(sys.argv[1]);
+	findrandom(files);
