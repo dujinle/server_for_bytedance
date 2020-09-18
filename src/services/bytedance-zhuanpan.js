@@ -16,7 +16,6 @@ module.exports = {
    */
   async update (query, info) {
 	let updata = Filter.filter(info);
-	console.log(updata)
     const user = await ZhuanPan.findOneAndUpdate(query, {$set:updata},{upsert: true})
     return user
   },

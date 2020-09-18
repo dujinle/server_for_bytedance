@@ -19,7 +19,6 @@ module.exports = {
 	if(updata.curGame && updata.curGame != ''){
 		updata.curGame = JSON.stringify(updata.curGame);
 	}
-	console.log(updata.curGame);
     const user = await ByteDanceGame.findOneAndUpdate(query, {$set:updata},{upsert: true})
     return user
   },
