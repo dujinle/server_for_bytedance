@@ -72,12 +72,12 @@ def make_level(levelfile,imagesdir,outdir):
 				print("Unexpected error:", sys.exc_info())
 				sys.exit(1)
 			words = [];
-			for wd in item:
+			for wd in item['name']:
 				words.append(wd);
 			ques['words'] = words;
 			ques['imageUrl'] = os.path.join(leveldir,md5name + item['type']);
 			level['question'].append(ques);
-		levelname = 'level_' + key + '.json';
+		levelname = 'level' + key + '.json';
 		lpath = os.path.join(outdir,levelname);
 		lstr = json.dumps(level,ensure_ascii=False);
 		with open(lpath,'w',encoding='utf8') as f:

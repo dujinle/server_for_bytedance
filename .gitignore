@@ -1,3 +1,11 @@
 node_modules/* 
 *.log
 config/default.json
+bin/buildout/
+bin/levelout/
+bin/menkesout/
+bin/predata.tar.gz
+bin/predata/menkes/
+bin/predata/roles/
+bin/predata/*
+bin/roleout/
