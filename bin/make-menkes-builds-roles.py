@@ -60,9 +60,9 @@ def make_level(levelfile,imagesdir,outdir):
 				'ImageType':1,
 				'imageUrl':None
 			};
-			source = os.path.join(imagesdir,item + '.png');
-			md5name = getmd5(item);
-			target = os.path.join(oimdir,md5name + '.png')
+			source = os.path.join(imagesdir,item['name'] + item['type']);
+			md5name = getmd5(item['name']);
+			target = os.path.join(oimdir,md5name + item['type'])
 			try:
 				copyfile(source, target)
 			except IOError as e:
@@ -75,7 +75,7 @@ def make_level(levelfile,imagesdir,outdir):
 			for wd in item:
 				words.append(wd);
 			ques['words'] = words;
-			ques['imageUrl'] = os.path.join(leveldir,md5name + '.png');
+			ques['imageUrl'] = os.path.join(leveldir,md5name + item['type']);
 			level['question'].append(ques);
 		levelname = 'level_' + key + '.json';
 		lpath = os.path.join(outdir,levelname);
@@ -100,9 +100,17 @@ def make_build(levelfile,imagesdir,outdir,exp):
 
 		images = [];
 		for item in dts['images']:
-			source = os.path.join(imagesdir,item + '.png');
+			extype = '.png';
+			source = os.path.join(imagesdir,item + extype);
+			if not os.path.exists(source):
+				extype = '.jpg';
+				source = os.path.join(imagesdir,item + extype);
+				if not os.path.exists(source):
+					print('no found',source);
+					break
+
 			md5name = getmd5(item);
-			target = os.path.join(oimdir,md5name + '.png')
+			target = os.path.join(oimdir,md5name + extype)
 			try:
 				copyfile(source, target)
 			except IOError as e:
@@ -111,7 +119,7 @@ def make_build(levelfile,imagesdir,outdir,exp):
 			except:
 				print("Unexpected error:", sys.exc_info())
 				sys.exit(1)
-			pt = os.path.join(exp,md5name + '.png');
+			pt = os.path.join(exp,md5name + extype);
 			images.append(pt);
 		dts['images'] = images;
 		dts['ImageType'] = 1;
