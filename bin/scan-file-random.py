@@ -26,6 +26,7 @@ def findrandom(fils):
 	ret = sorted(fils,key=mysort);
 	lens = len(ret);
 	idx = 0;
+	levelid = 0;
 	levels = {}
 	while True:
 		if idx >= lens:
@@ -35,8 +36,8 @@ def findrandom(fils):
 			sp = ret[idx:idx + 3];
 		else:
 			sp = ret[idx:];
-		levels[idx] = sp;
-
+		levels[levelid] = sp;
+		levelid = levelid + 1;
 		idx = idx + 3;
 	lstr = json.dumps(levels,ensure_ascii=False);
 	print(lstr);
