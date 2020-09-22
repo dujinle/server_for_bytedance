@@ -23,11 +23,10 @@ def mysort(b):
 		return True;
 	else:
 		return False;
-def findrandom(fils):
+def findrandom(fils,levelid):
 	ret = sorted(fils,key=mysort);
 	lens = len(ret);
 	idx = 0;
-	levelid = 0;
 	levels = {}
 	while True:
 		if idx >= lens:
@@ -53,4 +52,4 @@ elif sys.argv[1] == "--help":
 	print_usage(sys.argv[0])
 else:
 	files = scandir(sys.argv[1]);
-	findrandom(files);
+	findrandom(files,int(sys.argv[2]));
