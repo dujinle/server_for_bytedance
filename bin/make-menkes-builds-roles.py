@@ -60,6 +60,7 @@ def make_level(levelfile,imagesdir,outdir):
 				'ImageType':1,
 				'imageUrl':None
 			};
+			#print(imagesdir,item)
 			source = os.path.join(imagesdir,item['name'] + item['type']);
 			md5name = getmd5(item['name']);
 			target = os.path.join(oimdir,md5name + item['type'])
