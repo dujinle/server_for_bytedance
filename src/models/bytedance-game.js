@@ -11,6 +11,7 @@ const userSchema = new Schema({
   tipNum:{type:Number,default:3},
   livesNum:{type:Number,default:5},
   curGame:String,
+  lastInfo:String,
   livesTime:Number,
   unLock:Number,
   unLockIdx:Number

@@ -19,6 +19,9 @@ module.exports = {
 	if(updata.curGame && updata.curGame != ''){
 		updata.curGame = JSON.stringify(updata.curGame);
 	}
+	if(updata.lastInfo && updata.lastInfo != ''){
+		updata.lastInfo = JSON.stringify(updata.lastInfo);
+	}
     const user = await ByteDanceGame.findOneAndUpdate(query, {$set:updata},{upsert: true})
     return user
   },
