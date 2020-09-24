@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const rbmSchema = new Schema({
-  openid: { type: String, unique: true },
-  anonymous_openid: { type: String, unique: true },
+  openid: { type: String},
+  anonymous_openid: { type: String},
   rolehas:{type:Number,default:1},
   roleshow:{type:Number,default:1},
   buildhas:{type:Number,default:1},

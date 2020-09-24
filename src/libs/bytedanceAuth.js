@@ -69,13 +69,17 @@ class ByteDanceAuth {
    */
   async getUserinfo (code, anonymous_code) {
     const url = 'https://developer.toutiao.com/api/apps/jscode2session'
+    let params = {
+	appid: this.appid,
+	secret: this.appsecret	
+    };
+    if(code && code != 'none'){
+	params['code'] = code;
+    }else{
+	params['anonymous_code'] = anonymous_code;
+   }
     const response = await axios.get(url, {
-      params: {
-		appid: this.appid,
-		secret: this.appsecret,
-		code:code,
-		anonymous_code:anonymous_code
-      }
+      params: params
     })
     return response.data
   }

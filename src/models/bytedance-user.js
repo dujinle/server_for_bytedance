@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-  openid: { required: true, type: String, unique: true },
-  anonymous_openid: { required: true, type: String, unique: true },
+  openid: { type: String },
+  anonymous_openid: { type: String },
   avatar: String,
   sex: Number,
   nickname: String,

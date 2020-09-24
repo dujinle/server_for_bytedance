@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const zpSchema = new Schema({
-  openid: { type: String, unique: true },
-  anonymous_openid: {type: String, unique: true },
+  openid: { type: String },
+  anonymous_openid: {type: String},
   lastTime: Number,
   adTime:{type: Number,default:10},
   adUseDay:{type:Number,default:0}

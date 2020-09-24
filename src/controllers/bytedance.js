@@ -23,16 +23,21 @@ module.exports = {
     const userinfo = await Auth.getUserinfo(code,anonymous_code)
     ctx.session.user = userinfo
 	let user = null
-	if(userinfo.openid && userinfo.openid != ''){
+	if(userinfo.openid && userinfo.openid != 'none'){
 		user = await User.getUserByOpenid(userinfo.openid);
-	}else if(userinfo.anonymous_openid && userinfo.anonymous_openid != ''){
-		user = await User.getUserByAnonymousId(userinfo.anonymous_openid)
 	}
 	if(user){
 		ctx.body = user
 	}else{
-		user = await User.create(userinfo);
-		ctx.body = user
+		if(userinfo.anonymous_openid && userinfo.anonymous_openid != 'none'){
+			user = await User.getUserByAnonymousId(userinfo.anonymous_openid)
+		}
+		if(user){
+			ctx.body = user
+		}else{
+			user = await User.create(userinfo);
+			ctx.body = user
+		}
 	}
   },
   async getGame(ctx,next){
@@ -40,16 +45,21 @@ module.exports = {
 	const anonymous_openid = ctx.query.anonymous_openid;
 	ctx.log.info('getGame',openid,anonymous_openid);
 	let game = null
-	if(openid && openid != ''){
+	if(openid && openid != 'none'){
 		game = await Game.getUserByOpenid(openid);
-	}else if(anonymous_openid && anonymous_openid != ''){
-		game = await Game.getUserByAnonymousId(anonymous_openid);
 	}
 	if(game){
 		ctx.body = game;
 	}else{
-		game = await Game.create({openid:openid,anonymous_openid:anonymous_openid});
-		ctx.body = game
+		if(anonymous_openid && anonymous_openid != 'none'){
+			game = await Game.getUserByAnonymousId(anonymous_openid);
+		}
+		if(game){
+			ctx.body = game;
+		}else{
+			game = await Game.create({openid:openid,anonymous_openid:anonymous_openid});
+			ctx.body = game
+		}
 	}
   },
   async updateGame(ctx,next){
@@ -58,13 +68,19 @@ module.exports = {
 	const anonymous_openid = body.anonymous_openid;
 	const data = body.data;
 	ctx.log.info('updateGame',body);
-	if(openid && openid != ''){
-		const game = await Game.update({'openid':openid},data);
-		ctx.body = game;
+	let game = null;
+	if(openid && openid != 'none'){
+		game = await Game.update({'openid':openid},data);
 	}
-	else if(anonymous_openid && anonymous_openid != ''){
-		const game = await Game.update({'anonymous_openid':anonymous_openid},data);
+	if(game){
 		ctx.body = game;
+	}else{
+		if(anonymous_openid && anonymous_openid != 'none'){
+			game = await Game.update({'anonymous_openid':anonymous_openid},data);
+		}
+		if(game){
+			ctx.body = game;
+		}
 	}
   },
   async getMenKes(ctx,next){
@@ -72,16 +88,21 @@ module.exports = {
 	const anonymous_openid = ctx.query.anonymous_openid;
 	ctx.log.info('getMenKes',openid,anonymous_openid)
 	let rbms = null
-	if(openid && openid != ''){
+	if(openid && openid != 'none'){
 		rbms = await RBMS.getUserByOpenid(openid);
-	}else if(anonymous_openid && anonymous_openid != ''){
-		rbms = await RBMS.getUserByAnonymousId(anonymous_openid);
 	}
 	if(rbms){
 		ctx.body = rbms
 	}else{
-		rbms = await RBMS.create({openid:openid,anonymous_openid:anonymous_openid});
-		ctx.body = rbms
+		if(anonymous_openid && anonymous_openid != 'none'){
+			rbms = await RBMS.getUserByAnonymousId(anonymous_openid);
+		}
+		if(rbms){
+			ctx.body = rbms
+		}else{
+			rbms = await RBMS.create({openid:openid,anonymous_openid:anonymous_openid});
+			ctx.body = rbms
+		}
 	}
   },
   async updateMenKes(ctx,next){
@@ -90,29 +111,40 @@ module.exports = {
 	const anonymous_openid = body.anonymous_openid;
 	const data = body.data;
 	ctx.log.info('updateMenKes',body,data)
-	if(openid && openid != ''){
-		const game = await RBMS.update({'openid':openid},data);
-		ctx.body = game;
+	let rbms = null;
+	if(openid && openid != 'none'){
+		rbms = await RBMS.update({'openid':openid},data);
 	}
-	else if(anonymous_openid && anonymous_openid != ''){
-		const game = await RBMS.update({'anonymous_openid':anonymous_openid},data);
+	if(rbms){
 		ctx.body = game;
+	}else{
+		if(anonymous_openid && anonymous_openid != 'none'){
+			rbms = await RBMS.update({'anonymous_openid':anonymous_openid},data);
+		}
+		if(rbms){
+			ctx.body = game;
+		}
 	}
   },
   async getZhuanPan(ctx,next){
 	const openid = ctx.query.openid;
 	const anonymous_openid = ctx.query.anonymous_openid;
 	let zhuanpan = null
-	if(openid && openid != ''){
+	if(openid && openid != 'none'){
 		zhuanpan = await ZhuanPan.getByOpenid(openid);
-	}else if(anonymous_openid && anonymous_openid != ''){
-		zhuanpan = await ZhuanPan.getByAnonymousId(anonymous_openid);
 	}
 	if(zhuanpan){
 		ctx.body = zhuanpan
-	}else{
-		zhuanpan = await ZhuanPan.create({openid:openid,anonymous_openid:anonymous_openid});
-		ctx.body = zhuanpan
+	}else{ 
+		if(anonymous_openid && anonymous_openid != 'none'){
+			zhuanpan = await ZhuanPan.getByAnonymousId(anonymous_openid);
+		}
+		if(zhuanpan){
+			ctx.body = zhuanpan
+		}else{
+			zhuanpan = await ZhuanPan.create({openid:openid,anonymous_openid:anonymous_openid});
+			ctx.body = zhuanpan
+		}
 	}
   },
   async updateZhuanPan(ctx,next){
@@ -121,14 +153,20 @@ module.exports = {
 	const anonymous_openid = body.anonymous_openid;
 	const data = body.data;
 	ctx.log.info('updateZhuanPan',body,data)
-	if(openid && openid != ''){
-		const game = await ZhuanPan.update({'openid':openid},data);
-		ctx.log.info('updated',game);
-		ctx.body = game;
+	let zhuanpan = null;
+	if(openid && openid != 'none'){
+		zhuanpan = await ZhuanPan.update({'openid':openid},data);
+		ctx.log.info('updated',zhuanpan);
 	}
-	else if(anonymous_openid && anonymous_openid != ''){
-		const game = await ZhuanPan.update({'anonymous_openid':anonymous_openid},data);
-		ctx.body = game;
+	if(zhuanpan){
+		ctx.body = zhuanpan;
+	}else{
+		if(anonymous_openid && anonymous_openid != 'none'){
+			zhuanpan = await ZhuanPan.update({'anonymous_openid':anonymous_openid},data);
+		}
+		if(zhuanpan){
+			ctx.body = zhuanpan;
+		}
 	}
   }
 }
