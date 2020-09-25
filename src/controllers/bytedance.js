@@ -22,14 +22,15 @@ module.exports = {
 	 */
     const userinfo = await Auth.getUserinfo(code,anonymous_code)
     ctx.session.user = userinfo
+	ctx.log.info('auth userinfo',userinfo);
 	let user = null
-	if(userinfo.openid && userinfo.openid != 'none'){
+	if(userinfo.openid && userinfo.openid != 'none' && userinfo.openid != ''){
 		user = await User.getUserByOpenid(userinfo.openid);
 	}
 	if(user){
 		ctx.body = user
 	}else{
-		if(userinfo.anonymous_openid && userinfo.anonymous_openid != 'none'){
+		if(userinfo.anonymous_openid && userinfo.anonymous_openid != 'none' && userinfo.anonymous_openid != ''){
 			user = await User.getUserByAnonymousId(userinfo.anonymous_openid)
 		}
 		if(user){

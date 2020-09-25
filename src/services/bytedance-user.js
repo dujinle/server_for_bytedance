@@ -6,6 +6,9 @@ module.exports = {
    * @param {*} info 
    */
   async create (info) {
+    if(info.openid == '' || info.openid == null){
+	info.openid = 'none';
+    }
     const user = new ByteDanceUser(info)
     return user.save()
   },
