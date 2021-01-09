@@ -4,7 +4,7 @@ const config = require('config')
 mongoose.Promise = global.Promise
 
 mongoose.connect(config.get('db.url'), {
-  useMongoClient: true
+  useMongoClient: true,
   authSource:config.get('db.authSource'),
   server:{
      auto_reconnect:true,
