@@ -5,6 +5,13 @@ mongoose.Promise = global.Promise
 
 mongoose.connect(config.get('db.url'), {
   useMongoClient: true
+  authSource:config.get('db.authSource'),
+  server:{
+     auto_reconnect:true,
+     poolSize:3
+  },
+  user: config.get('db.user'),
+  pass: config.get('db.password')
 })
 
 const User = require('./user')
